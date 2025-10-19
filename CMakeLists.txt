@@ -6,31 +6,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Quick)
 
-qt_standard_project_setup()
+qt_standard_project_setup(REQUIRES 6.8)
 
 file(GLOB_RECURSE HEADERS   "${CMAKE_CURRENT_LIST_DIR}/src/*.hpp")
 file(GLOB_RECURSE SOURCES   "${CMAKE_CURRENT_LIST_DIR}/src/*.cpp")
-file(GLOB_RECURSE ABS_QML_FILES "${CMAKE_CURRENT_LIST_DIR}/src/*.qml")
-file(GLOB_RECURSE ABS_XML_FILES "${CMAKE_CURRENT_LIST_DIR}/src/*.xml")
-file(GLOB_RECURSE ABS_GRADLE_FILES "${CMAKE_CURRENT_LIST_DIR}/src/*.gradle")
-
-set(QML_FILES "")
-foreach(f ${ABS_QML_FILES})
-    file(RELATIVE_PATH REL_PATH "${CMAKE_CURRENT_LIST_DIR}" "${f}")
-    list(APPEND QML_FILES "${REL_PATH}")
-endforeach()
-
-set(XML_FILES "")
-foreach(f ${ABS_XML_FILES})
-    file(RELATIVE_PATH REL_PATH "${CMAKE_CURRENT_LIST_DIR}" "${f}")
-    list(APPEND XML_FILES "${REL_PATH}")
-endforeach()
-
-set(GRADLE_FILES "")
-foreach(f ${ABS_GRADLE_FILES})
-    file(RELATIVE_PATH REL_PATH "${CMAKE_CURRENT_LIST_DIR}" "${f}")
-    list(APPEND GRADLE_FILES "${REL_PATH}")
-endforeach()
+file(GLOB_RECURSE QML_FILES "${CMAKE_CURRENT_LIST_DIR}/src/*.qml")
 
 qt_add_executable(${PROJECT_NAME}
     ${HEADERS}
@@ -42,11 +22,13 @@ qt_add_qml_module(${PROJECT_NAME}
     VERSION 1.0
 
     QML_FILES
-        ${QML_FILES}
+        src/android/Main.qml
 
     RESOURCES
-        ${XML_FILES}
-        ${GRADLE_FILES}
+        src/android/android/AndroidManifest.xml
+        src/android/android/build.gradle
+        src/android/android/res/values/libs.xml
+        src/android/android/res/xml/qtprovider_paths.xml
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
